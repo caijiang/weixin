@@ -115,8 +115,11 @@ public abstract class AbstractHandler {
 
     private String getUrl(HttpServletRequest request) {
         String url = request.getRequestURL().toString();
+        if (request.getHeader("X-Forwarded-Host") != null) {
+            url = url.replace(request.getServerName(), request.getHeader("X-Forwarded-Host"));
+        }
         //微信授权是不支持任何端口的，所以 replace it
-        if(url.matches("http[s]?:\\/\\/[a-zA-Z.0-9]+(:\\d+).*")){
+        if (url.matches("http[s]?:/\\/[a-zA-Z.0-9]+(:\\d+).*")) {
             url = url.replaceFirst(":\\d+","");
         }
         //竟然url上不带参数，那我只能自己加咯
