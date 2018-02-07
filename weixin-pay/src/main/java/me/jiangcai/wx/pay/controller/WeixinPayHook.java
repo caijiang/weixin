@@ -1,6 +1,7 @@
 package me.jiangcai.wx.pay.controller;
 
 import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
+import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.protocol.Protocol;
 import me.jiangcai.wx.protocol.event.OrderChangeEvent;
 import org.apache.commons.logging.Log;
@@ -31,7 +32,7 @@ public class WeixinPayHook {
 
     private static final Log log = LogFactory.getLog(WeixinPayHook.class);
 
-    @RequestMapping(method = RequestMethod.POST,value = "#{weixinPayUrl.relUrl}")
+    @RequestMapping(method = RequestMethod.POST,value = WeixinPayUrl.relUrl)
     public ResponseEntity<String> webRequest(HttpServletRequest request, @RequestHeader("Sign") String sign) throws Exception {
         final String content = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));
         log.debug("来访数据:" + content);

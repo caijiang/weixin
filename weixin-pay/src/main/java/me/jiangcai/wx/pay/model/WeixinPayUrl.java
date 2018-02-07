@@ -13,7 +13,7 @@ public class WeixinPayUrl {
      */
     private String absUrl;
     /**
-     * 相对的请求地址，用于定义 RequestMapping
+     * 相对的请求地址，没必要给使用者定义吧
      */
-    private String relUrl;
+    public static final String relUrl = "/weixin/payment/notify";
 }
