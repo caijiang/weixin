@@ -204,7 +204,7 @@ class ProtocolImpl implements Protocol {
         orderInfoMap.put("nonceStr", uuid);
         orderInfoMap.put("package", "prepay_id=" + prepayId);
         orderInfoMap.put("signType", "MD5");
-        orderInfoMap.put("sign", WXPayUtil.generateSignature(orderInfoMap, account.getApiKey(), WXPayConstants.SignType.MD5));
+        orderInfoMap.put("paySign", WXPayUtil.generateSignature(orderInfoMap, account.getApiKey(), WXPayConstants.SignType.MD5));
         return objectMapper.writeValueAsString(orderInfoMap);
     }
 
@@ -253,7 +253,7 @@ class ProtocolImpl implements Protocol {
         reqData.put("appid", account.getAppID());
         reqData.put("mch_id", account.getMchID());
         reqData.put("nonce_str", UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32));
-        reqData.put("paySign", WXPayUtil.generateSignature(reqData, account.getApiKey(), WXPayConstants.SignType.MD5));
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, account.getApiKey(), WXPayConstants.SignType.MD5));
         return reqData;
     }
 

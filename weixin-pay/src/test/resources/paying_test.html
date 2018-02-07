@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>微信支付</title>
+</head>
+<body>
+<script>
+
+    function onBridgeReady() {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId":"wx198ba167229080c1",
+                "timeStamp":"1518010383658",
+                "nonceStr":"4e38fa8eaf86421aa1a2543daab3b519",
+                "package":"prepay_id=wx20180207213130870431538e0000596413",
+                "signType":"MD5",
+                "paySign":"155FCF88802066016CE4E2A4CF8B131A",
+            },
+            function (res) {
+                alert(res);
+                console.log(res.err_msg);
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+//                    window.location.href = "http://front.staging.sb.lmjia.cn/#/personal";
+                } else {
+//                    window.location.href = "http://www.baidu.com";
+                }
+            }
+        );
+    }
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    } else {
+        onBridgeReady();
+    }
+</script>
+</body>
+</html>
