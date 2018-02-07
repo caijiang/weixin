@@ -1,10 +1,10 @@
-package me.jiangcai.wx.standard.entity;
+package me.jiangcai.wx.pay.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.payment.entity.PayOrder;
-import me.jiangcai.wx.standard.service.WeixinPaymentForm;
+import me.jiangcai.wx.pay.service.WeixinPaymentForm;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

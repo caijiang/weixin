@@ -1,4 +1,4 @@
-package me.jiangcai.wx.standard.service;
+package me.jiangcai.wx.pay.service;
 
 import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.wx.protocol.event.OrderChangeEvent;

@@ -3,7 +3,7 @@ package me.jiangcai.wx.pay.service;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.service.PayableSystemService;
-import me.jiangcai.wx.standard.entity.WeixinPayOrder;
+import me.jiangcai.wx.pay.entity.WeixinPayOrder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 

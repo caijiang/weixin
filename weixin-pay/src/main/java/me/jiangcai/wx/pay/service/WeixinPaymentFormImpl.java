@@ -1,4 +1,4 @@
-package me.jiangcai.wx.standard.service;
+package me.jiangcai.wx.pay.service;
 
 import me.jiangcai.lib.ee.ServletUtils;
 import me.jiangcai.payment.PayableOrder;
@@ -6,13 +6,13 @@ import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentGatewayService;
 import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
-import me.jiangcai.wx.model.WeixinPayUrl;
+import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.model.pay.TradeType;
 import me.jiangcai.wx.model.pay.UnifiedOrderRequest;
 import me.jiangcai.wx.model.pay.UnifiedOrderResponse;
+import me.jiangcai.wx.pay.entity.WeixinPayOrder;
 import me.jiangcai.wx.protocol.Protocol;
 import me.jiangcai.wx.protocol.event.OrderChangeEvent;
-import me.jiangcai.wx.standard.entity.WeixinPayOrder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

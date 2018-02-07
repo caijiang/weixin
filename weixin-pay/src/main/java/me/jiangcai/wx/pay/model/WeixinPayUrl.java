@@ -1,4 +1,4 @@
-package me.jiangcai.wx.model;
+package me.jiangcai.wx.pay.model;
 
 import lombok.Data;
 

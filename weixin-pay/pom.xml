@@ -23,6 +23,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>payment-api</artifactId>
+            <version>${payment.version}</version>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.lib</groupId>
             <artifactId>test</artifactId>
             <version>${jiangcai.version}</version>
