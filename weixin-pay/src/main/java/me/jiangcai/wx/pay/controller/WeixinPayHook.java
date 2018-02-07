@@ -33,7 +33,7 @@ public class WeixinPayHook {
     private static final Log log = LogFactory.getLog(WeixinPayHook.class);
 
     @RequestMapping(method = RequestMethod.POST,value = WeixinPayUrl.relUrl)
-    public ResponseEntity<String> webRequest(HttpServletRequest request, @RequestHeader("Sign") String sign) throws Exception {
+    public ResponseEntity<String> webRequest(HttpServletRequest request) throws Exception {
         final String content = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));
         log.debug("来访数据:" + content);
         //解析数据，并校验sign
