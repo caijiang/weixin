@@ -5,7 +5,9 @@ import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentGatewayService;
+import me.jiangcai.wx.PublicAccountSupplier;
 import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
+import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.model.pay.TradeType;
 import me.jiangcai.wx.model.pay.UnifiedOrderRequest;
@@ -26,6 +28,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -43,6 +46,8 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
     private EntityManager entityManager;
     @Autowired
     private WeixinPayUrl weixinPayUrl;
+    @Autowired
+    private PublicAccountSupplier publicAccountSupplier;
 
     @Override
     public PayOrder newPayOrder(HttpServletRequest request, PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
@@ -113,14 +118,18 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
     @EventListener(OrderChangeEvent.class)
     public void orderChange(OrderChangeEvent event) {
         log.debug("trade event:" + event);
-        UnifiedOrderResponse orderResponse = Protocol.forAccount(weixinRequestHandlerMapping.currentPublicAccount()).getOrderQueryResponse(event.getData());
-        WeixinPayOrder order = paymentGatewayService.getOrder(WeixinPayOrder.class, orderResponse.getOrderNumber());
+        //解析数据，并校验sign
+        PublicAccount publicAccount = publicAccountSupplier.getAccounts().stream()
+                .filter(account->account.getAppID().equals(event.getData().get("appid")))
+                .findFirst().orElse(null);
+        UnifiedOrderResponse orderResponse = Protocol.forAccount(publicAccount).getOrderQueryResponse(event.getData());
+        WeixinPayOrder order = paymentGatewayService.getOrder(WeixinPayOrder.class, orderResponse.getTransactionId());
         if (order == null) {
             log.warn("received trade event without system:" + event);
             return;
         }
         //校验金额是否一致
-        if (order.getAmount().compareTo(orderResponse.getTotalFee()) != 0) {
+        if (order.getAmount().multiply(BigDecimal.valueOf(100L)).compareTo(orderResponse.getTotalFee()) != 0) {
             log.warn("received trade amount not equal:" + event);
             return;
         }
@@ -132,7 +141,7 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
         order.setOrderStatus(orderResponse.getTradeStatus());
 
         if (!order.isCancel()) {
-            if ("SUCCEED".equals(order.getOrderStatus())) {
+            if ("SUCCESS".equals(order.getOrderStatus())) {
                 paymentGatewayService.paySuccess(order);
             } else if ("CLOSED".equals(order.getOrderStatus())) {
                 paymentGatewayService.payCancel(order);

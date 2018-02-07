@@ -1,6 +1,9 @@
 package me.jiangcai.wx.pay.controller;
 
+import com.github.wxpay.sdk.WXPayUtil;
+import me.jiangcai.wx.PublicAccountSupplier;
 import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
+import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.protocol.Protocol;
 import me.jiangcai.wx.protocol.event.OrderChangeEvent;
@@ -28,7 +31,7 @@ public class WeixinPayHook {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
-    private WeixinRequestHandlerMapping mapping;
+    private PublicAccountSupplier publicAccountSupplier;
 
     private static final Log log = LogFactory.getLog(WeixinPayHook.class);
 
@@ -36,15 +39,19 @@ public class WeixinPayHook {
     public ResponseEntity<String> webRequest(HttpServletRequest request) throws Exception {
         final String content = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));
         log.debug("来访数据:" + content);
+        Map<String, String> respData = WXPayUtil.xmlToMap(content);
         //解析数据，并校验sign
-        Map<String,String> data = Protocol.forAccount(mapping.currentPublicAccount()).processResponseXml(content);
+        PublicAccount publicAccount = publicAccountSupplier.getAccounts().stream()
+                .filter(account->account.getAppID().equals(respData.get("appid")))
+                .findFirst().orElse(null);
+        Map<String,String> data = Protocol.forAccount(publicAccount).processResponseXml(content);
         OrderChangeEvent event = new OrderChangeEvent();
         event.setData(data);
         applicationEventPublisher.publishEvent(event);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.TEXT_PLAIN)
-                .body("success");
+                .body("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
     }
 
 

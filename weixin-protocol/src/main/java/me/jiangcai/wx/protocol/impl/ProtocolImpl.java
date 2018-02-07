@@ -267,7 +267,7 @@ class ProtocolImpl implements Protocol {
     @Override
     public Map<String, String> processResponseXml(String xmlStr) throws Exception {
         String RETURN_CODE = "return_code", RETURN_MSG = "return_msg";
-        String return_code, return_msg;
+        String return_code, return_msg = null;
         Map<String, String> respData = WXPayUtil.xmlToMap(xmlStr);
         if (respData.containsKey(RETURN_CODE)) {
             return_code = respData.get(RETURN_CODE);
@@ -276,8 +276,6 @@ class ProtocolImpl implements Protocol {
         }
         if (respData.containsKey(RETURN_MSG)) {
             return_msg = respData.get(RETURN_MSG);
-        } else {
-            throw new IllegalXmlException();
         }
 
         if (WXPayConstants.FAIL.equals(return_code)) {
@@ -312,7 +310,7 @@ class ProtocolImpl implements Protocol {
     @Override
     public UnifiedOrderResponse getOrderQueryResponse(Map<String, String> data) {
         final String RESULT_CODE = "result_code", ERROR_CODE_DES = "err_code_des";
-        final String TRADE_STATE = "trade_state", OPEN_ID = "openid", TOTAL_FEE = "total_fee", BANK_TYPE = "bank_type", TRANSACTION_ID = "transaction_id", TIME_END = "time_end";
+        final String OUT_TRADE_NO = "out_trade_no",TRADE_STATE = "trade_state", OPEN_ID = "openid", TOTAL_FEE = "total_fee", BANK_TYPE = "bank_type", TRANSACTION_ID = "transaction_id", TIME_END = "time_end";
         String resultCode = data.getOrDefault(RESULT_CODE, null);
         if (WXPayConstants.FAIL.equals(resultCode)) {
             String errCodeDes = data.getOrDefault(ERROR_CODE_DES, null);
@@ -329,6 +327,7 @@ class ProtocolImpl implements Protocol {
             }
             response.setTradeStatus(tradeStatus);
             if (WXPayConstants.SUCCESS.equals(tradeStatus)) {
+                response.setOrderNumber(data.get(OUT_TRADE_NO));
                 response.setBankType(data.get(BANK_TYPE));
                 response.setTransactionId(data.get(TRANSACTION_ID));
                 response.setPayTime(LocalDateTime.parse(data.get(TIME_END), dateTimeFormatter));
