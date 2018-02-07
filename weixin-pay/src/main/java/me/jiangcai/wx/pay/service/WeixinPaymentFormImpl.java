@@ -74,6 +74,7 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
                 case JSAPI:
                     payOrder.setPrepayId(orderResponse.getPrepayId());
                     payOrder.setJavascriptToPay(javascriptForWechatPay(orderResponse.getPrepayId()));
+                    log.debug("javascript:" + payOrder.getJavascriptToPay());
                     break;
                 case NATIVE:
                     payOrder.setCodeUrl(orderResponse.getCodeUrl());

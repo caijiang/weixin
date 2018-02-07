@@ -239,7 +239,7 @@ class ProtocolImpl implements Protocol {
             orderMap.put("scene_info", objectMapper.writeValueAsString(orderRequest.getMetadata()));
         }
         if (!StringUtils.isEmpty(orderRequest.getOpenId())) {
-            orderMap.put("openId", orderRequest.getOpenId());
+            orderMap.put("openid", orderRequest.getOpenId());
         }
         return fillUnifiedOrder(orderMap);
     }
@@ -253,7 +253,7 @@ class ProtocolImpl implements Protocol {
         reqData.put("appid", account.getAppID());
         reqData.put("mch_id", account.getMchID());
         reqData.put("nonce_str", UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32));
-        reqData.put("sign", WXPayUtil.generateSignature(reqData, account.getApiKey(), WXPayConstants.SignType.MD5));
+        reqData.put("paySign", WXPayUtil.generateSignature(reqData, account.getApiKey(), WXPayConstants.SignType.MD5));
         return reqData;
     }
 
