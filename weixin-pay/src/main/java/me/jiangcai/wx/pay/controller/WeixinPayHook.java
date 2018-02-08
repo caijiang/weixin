@@ -47,7 +47,7 @@ public class WeixinPayHook {
         event.setData(data);
         applicationEventPublisher.publishEvent(event);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_XML)
-                .body("<return_code><![CDATA[SUCCESS]]></return_code>");
+                .body("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
     }
 
 
