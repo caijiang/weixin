@@ -55,6 +55,7 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
         payOrder.setAmount(order.getOrderDueAmount());
 
         UnifiedOrderRequest orderRequest = new UnifiedOrderRequest();
+        orderRequest.setOrderNumber(order.getPayableOrderId().toString());
         orderRequest.setBody(order.getOrderBody());
         orderRequest.setAmount(order.getOrderDueAmount());
         orderRequest.setClientIpAddress(ServletUtils.clientIpAddress(request));
@@ -91,7 +92,6 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
             log.error("生成订单出错", e);
             throw new SystemMaintainException(e);
         }
-        payOrder.setPlatformId(orderRequest.getOrderNumber());
         return payOrder;
     }
 
@@ -120,10 +120,10 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
         log.debug("trade event:" + event);
         //解析数据，并校验sign
         PublicAccount publicAccount = publicAccountSupplier.getAccounts().stream()
-                .filter(account->account.getAppID().equals(event.getData().get("appid")))
+                .filter(account -> account.getAppID().equals(event.getData().get("appid")))
                 .findFirst().orElse(null);
         UnifiedOrderResponse orderResponse = Protocol.forAccount(publicAccount).getOrderQueryResponse(event.getData());
-        WeixinPayOrder order = paymentGatewayService.getOrder(WeixinPayOrder.class, orderResponse.getTransactionId());
+        WeixinPayOrder order = paymentGatewayService.getOrderByPayableOrderId(WeixinPayOrder.class, orderResponse.getOrderNumber());
         if (order == null) {
             log.warn("received trade event without system:" + event);
             return;

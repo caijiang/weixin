@@ -2,7 +2,6 @@ package me.jiangcai.wx.pay.controller;
 
 import com.github.wxpay.sdk.WXPayUtil;
 import me.jiangcai.wx.PublicAccountSupplier;
-import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.protocol.Protocol;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -48,10 +46,8 @@ public class WeixinPayHook {
         OrderChangeEvent event = new OrderChangeEvent();
         event.setData(data);
         applicationEventPublisher.publishEvent(event);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .body("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_XML)
+                .body("<return_code><![CDATA[SUCCESS]]></return_code>");
     }
 
 
