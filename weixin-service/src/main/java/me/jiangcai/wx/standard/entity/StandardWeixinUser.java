@@ -113,7 +113,7 @@ public class StandardWeixinUser extends WeixinUserDetail implements WeixinUser {
         return super.getOpenId();
     }
 
-    @Column(length = 100)
+    @Column(length = 100,columnDefinition = "varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     @Override
     public String getNickname() {
         return super.getNickname();
