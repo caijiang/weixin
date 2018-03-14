@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
-@JsonIgnoreProperties({"tagid_list"})
+@JsonIgnoreProperties(value = {"tagid_list"}, ignoreUnknown = true)
 public class MyWeixinUserDetail extends WeixinUserDetail {
     // tagid_list:[] 还不知道是什么
 
