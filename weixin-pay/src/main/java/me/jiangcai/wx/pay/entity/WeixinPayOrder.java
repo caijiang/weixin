@@ -6,7 +6,9 @@ import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.pay.service.WeixinPaymentForm;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
 import java.math.BigDecimal;
 
 /**
@@ -18,6 +20,16 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 public class WeixinPayOrder extends PayOrder {
+    /**
+     * @since 2.3.0
+     */
+    @Column(columnDefinition = "varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+    private String nickname;
+    /**
+     * @since 2.3.0
+     */
+    @Column(length = 180)
+    private String headImageUrl;
     /**
      * 一段脚本可以引导支付
      */

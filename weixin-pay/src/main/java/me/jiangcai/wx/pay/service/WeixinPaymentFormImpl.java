@@ -8,11 +8,11 @@ import me.jiangcai.payment.service.PaymentGatewayService;
 import me.jiangcai.wx.PublicAccountSupplier;
 import me.jiangcai.wx.couple.WeixinRequestHandlerMapping;
 import me.jiangcai.wx.model.PublicAccount;
-import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.model.pay.TradeType;
 import me.jiangcai.wx.model.pay.UnifiedOrderRequest;
 import me.jiangcai.wx.model.pay.UnifiedOrderResponse;
 import me.jiangcai.wx.pay.entity.WeixinPayOrder;
+import me.jiangcai.wx.pay.model.WeixinPayUrl;
 import me.jiangcai.wx.protocol.Protocol;
 import me.jiangcai.wx.protocol.event.OrderChangeEvent;
 import org.apache.commons.logging.Log;
@@ -53,6 +53,12 @@ public class WeixinPaymentFormImpl implements WeixinPaymentForm {
     public PayOrder newPayOrder(HttpServletRequest request, PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
         WeixinPayOrder payOrder = new WeixinPayOrder();
         payOrder.setAmount(order.getOrderDueAmount());
+        if (!StringUtils.isEmpty(additionalParameters.get("nickname"))) {
+            payOrder.setNickname(additionalParameters.get("nickname").toString());
+        }
+        if (!StringUtils.isEmpty(additionalParameters.get("headUrl"))) {
+            payOrder.setHeadImageUrl(additionalParameters.get("headUrl").toString());
+        }
 
         UnifiedOrderRequest orderRequest = new UnifiedOrderRequest();
         orderRequest.setOrderNumber(payOrder.getMerchantOrderId());

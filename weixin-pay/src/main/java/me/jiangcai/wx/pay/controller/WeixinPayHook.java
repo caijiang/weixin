@@ -33,16 +33,18 @@ public class WeixinPayHook {
 
     private static final Log log = LogFactory.getLog(WeixinPayHook.class);
 
-    @RequestMapping(method = RequestMethod.POST,value = WeixinPayUrl.relUrl)
+    @RequestMapping(method = RequestMethod.POST, value = "${wechat.pay.notify.uri:" + WeixinPayUrl.relUrl + "}")
     public ResponseEntity<String> webRequest(HttpServletRequest request) throws Exception {
         final String content = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));
         log.debug("来访数据:" + content);
+        if (content.length() == 0)
+            throw new IllegalArgumentException();
         Map<String, String> respData = WXPayUtil.xmlToMap(content);
         //解析数据，并校验sign
         PublicAccount publicAccount = publicAccountSupplier.getAccounts().stream()
-                .filter(account->account.getAppID().equals(respData.get("appid")))
+                .filter(account -> account.getAppID().equals(respData.get("appid")))
                 .findFirst().orElse(null);
-        Map<String,String> data = Protocol.forAccount(publicAccount).processResponseXml(content);
+        Map<String, String> data = Protocol.forAccount(publicAccount).processResponseXml(content);
         OrderChangeEvent event = new OrderChangeEvent();
         event.setData(data);
         applicationEventPublisher.publishEvent(event);
